@@ -19,15 +19,15 @@ const router = createRouter({
 });
 
 // Authentication
-router.beforeEach(async (to) => {
+router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth) {
     // eslint-disable-next-line no-constant-condition, no-self-compare
-    if ('user is not logged in') {
-      return '/login';
+    if (false) {
+      router.push({ name: 'login' });
     }
   }
   // All is good and continue
-  return true;
+  next();
 });
 
 export default router;

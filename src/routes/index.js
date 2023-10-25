@@ -1,7 +1,4 @@
-import AuthRoutes from './auth';
-import AppRoutes from './app';
+import AppRoutes from './app-routes';
+import AuthRoutes from './auth-routes';
 
-export default [
-  ...AuthRoutes,
-  ...AppRoutes,
-];
+export default [...AppRoutes, ...AuthRoutes];
