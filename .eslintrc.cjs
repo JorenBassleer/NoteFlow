@@ -13,6 +13,7 @@ module.exports = {
   rules: {
     'max-len': 'off',
     'no-underscore-dangle': 'off',
+    'import/prefer-default-export': 'off',
     'no-console': 'error',
     'quote-props': ['error', 'consistent-as-needed'],
     'linebreak-style': 'off',
