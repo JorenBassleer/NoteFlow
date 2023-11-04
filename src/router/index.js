@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import { useUsersStore } from '../store/users';
 import AllRoutes from '../routes';
 
 const router = createRouter({
@@ -13,18 +14,16 @@ const router = createRouter({
     {
       path: '/:catchAll(.*)',
       name: 'NotFound',
-      component: '',
+      component: () => import('../views/error/404Error.vue'),
     },
   ],
 });
 
 // Authentication
 router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth) {
-    // eslint-disable-next-line no-constant-condition, no-self-compare
-    if (false) {
-      router.push({ name: 'login' });
-    }
+  const store = useUsersStore();
+  if (to.meta.requiresAuth && !store.isLoggedIn) {
+    router.push({ name: 'login' });
   }
   // All is good and continue
   next();

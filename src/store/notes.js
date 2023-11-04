@@ -3,7 +3,10 @@ import { collection, getDocs, addDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 
 export const useNotesStore = defineStore('notes', {
-  state: () => ({ notes: [] }),
+  state: () => ({
+    notes: [],
+    isLoading: false,
+  }),
   getters: {},
   actions: {
     // eslint-disable-next-line arrow-body-style
@@ -12,6 +15,7 @@ export const useNotesStore = defineStore('notes', {
       return id;
     },
     async fetchNotes() {
+      this.isLoading = true;
       const querySnapshot = await getDocs(collection(db, 'notes'));
       querySnapshot.forEach((doc) => {
         this.notes.push({
@@ -19,11 +23,17 @@ export const useNotesStore = defineStore('notes', {
           ...doc.data(),
         });
       });
+      this.isLoading = false;
     },
     async createNote(note) {
+      this.isLoading = true;
       const newlyCreatedNote = await addDoc(collection(db, 'notes'), note);
       // send to server
-      this.notes.push(note);
+      this.notes.push({
+        id: newlyCreatedNote.id,
+        ...newlyCreatedNote.data(),
+      });
+      this.isLoading = false;
     },
     updateNote: (note, id) => {
       // send to server
