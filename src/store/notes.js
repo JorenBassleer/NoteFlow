@@ -17,12 +17,11 @@ export const useNotesStore = defineStore('notes', {
     async fetchNotes() {
       this.isLoading = true;
       const querySnapshot = await getDocs(collection(db, 'notes'));
-      querySnapshot.forEach((doc) => {
-        this.notes.push({
-          id: doc.id,
-          ...doc.data(),
-        });
-      });
+      const notesArray = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      this.notes = notesArray;
       this.isLoading = false;
     },
     async createNote(note) {
