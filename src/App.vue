@@ -4,7 +4,7 @@
     <header />
     <main class="w-full h-screen">
       <section
-        v-if="userStore.isLoggedIn"
+        v-if="userStore.isLoggedIn || auth.currentUser"
         class="h-full w-full flex gap-10 flex-col justify-center items-center p-8"
       >
         <fwb-button
@@ -58,7 +58,7 @@
   </section>
 </template>
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onBeforeMount, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import LoginForm from '@components/auth/LoginForm.vue';
 import ConfigNoteModal from '@components/modals/ConfigNote.vue';
@@ -87,12 +87,10 @@ const handleClickCreate = () => {
 };
 
 const handleSignOut = () => {
-  signOut(auth).then(() => {
-    
-  });
+  signOut(auth);
 };
 
-onMounted(async () => {
+onBeforeMount(async () => {
   auth = getAuth();
   onAuthStateChanged(auth, (user) => {
     if (user) userStore.isLoggedIn = true;

@@ -65,7 +65,7 @@ const newNote = ref(props.note ?? {
 });
 
 const submitForm = async () => {
-    console.log(newNote.value);
+  try {
     if (props.isCreate) await notesStore.createNote(newNote.value);
     else await notesStore.updateNote(newNote.value, props.note.id);
     emit('submitSuccess');
@@ -78,10 +78,12 @@ const submitForm = async () => {
       title: '',
       content: '',
     };
+  } catch (error) {
     notify({
       title: 'Error',
       text: error.message,
       type: 'danger',
     });
+  }
 };
 </script>

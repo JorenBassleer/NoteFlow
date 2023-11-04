@@ -49,14 +49,16 @@
   </fwb-card>
 </template>
 <script setup>
-import { defineProps, defineEmits } from 'vue';
+import { defineProps, defineEmits, onMounted, ref } from 'vue';
 import { FwbCard, FwbAvatar, FwbButton } from 'flowbite-vue';
 import { useNotification } from '@kyvg/vue3-notification';
+import { getAuth } from 'firebase/auth';
 import { useNotesStore } from '../../store/notes';
 
 const store = useNotesStore();
 const { notify } = useNotification();
-
+const user = ref();
+const auth = getAuth();
 const props = defineProps({
   note: {
     type: Object,
@@ -81,4 +83,10 @@ const handleClickDelete = async () => {
     });
   }
 };
+
+onMounted(() => {
+  auth.getUser(props.note.userId).then((userRecord) => {
+    user.value = userRecord;
+  });
+});
 </script>
