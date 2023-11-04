@@ -29,7 +29,7 @@ export const useNotesStore = defineStore('notes', {
       await addDoc(collection(db, 'notes'), note);
       await this.fetchNotes();
     },
-    updateNote: (note, id) => {
+    async updateNote(note, id) {
       // send to server
     },
     deleteNote: (id) => {

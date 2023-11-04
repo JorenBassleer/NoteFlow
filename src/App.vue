@@ -4,7 +4,7 @@
     <main class="w-full h-screen">
       <section
         v-if="userStore.isLoggedIn"
-        class="h-full w-full flex gap-10 flex-col justify-center items-center"
+        class="h-full w-full flex gap-10 flex-col justify-center items-center p-8"
       >
         <div class="flex justify-end">
           <fwb-button
@@ -17,7 +17,7 @@
             Create new note
           </fwb-button>
         </div>
-        <div class="flex gap-2">
+        <div class="flex gap-2 overflow-y-scroll p-4 m-4">
           <NoteList
             v-if="!isLoading"
             :notes="notes"
@@ -38,7 +38,7 @@
         <LoginForm />
       </section>
       <!-- <CreateForm /> -->
-      <CreateNoteModal
+      <ConfigNoteModal
         v-model:visible="showCreateModal"
       />
     </main>
@@ -48,7 +48,7 @@
 import { onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import LoginForm from '@components/auth/LoginForm.vue';
-import CreateNoteModal from '@components/modals/CreateNote.vue';
+import ConfigNoteModal from '@components/modals/ConfigNote.vue';
 import { FwbButton, FwbSpinner } from 'flowbite-vue';
 import NoteList from './components/notes/NoteList.vue';
 import { useNotesStore } from './store/notes';
