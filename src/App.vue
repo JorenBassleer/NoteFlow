@@ -8,10 +8,10 @@
       >
         <div class="flex justify-end">
           <fwb-button
-            color="dark"
+            gradient="purple-blue"
+            outline
             size="lg"
             class="transition-all duration-150"
-            pill
             @click="showCreateModal = true"
           >
             Create new note
@@ -19,18 +19,29 @@
         </div>
         <div class="flex gap-2">
           <NoteList
+            v-if="!isLoading"
             :notes="notes"
           />
+          <div
+            v-else
+            class="flex flex-col gap-2 justify-center items-center"
+          >
+            <fwb-spinner
+              color="white"
+              size="12"
+            />
+            <span class="text-white font-semibold">Loading notes...</span>
+          </div>
         </div>
       </section>
       <section v-else>
         <LoginForm />
       </section>
       <!-- <CreateForm /> -->
+      <CreateNoteModal
+        v-model:visible="showCreateModal"
+      />
     </main>
-    <CreateNoteModal
-      v-model:visible="showCreateModal"
-    />
   </section>
 </template>
 <script setup>
@@ -38,14 +49,14 @@ import { onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import LoginForm from '@components/auth/LoginForm.vue';
 import CreateNoteModal from '@components/modals/CreateNote.vue';
-import { FwbButton } from 'flowbite-vue';
+import { FwbButton, FwbSpinner } from 'flowbite-vue';
 import NoteList from './components/notes/NoteList.vue';
 import { useNotesStore } from './store/notes';
 import { useUsersStore } from './store/users';
 
 const notesStore = useNotesStore();
 const userStore = useUsersStore();
-const { notes } = storeToRefs(notesStore);
+const { notes, isLoading } = storeToRefs(notesStore);
 const showCreateModal = ref(false);
 
 onMounted(async () => {

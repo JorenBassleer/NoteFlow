@@ -67,7 +67,6 @@
 }
 body {
   min-height: 100vh;
-  color: var(--color-text);
   background: linear-gradient(
     -50deg,
     rgb(14, 11, 65) 0%,

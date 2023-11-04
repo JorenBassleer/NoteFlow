@@ -25,6 +25,7 @@ export const useNotesStore = defineStore('notes', {
       this.isLoading = false;
     },
     async createNote(note) {
+      console.log('creating note:', note);
       await addDoc(collection(db, 'notes'), note);
       await this.fetchNotes();
     },

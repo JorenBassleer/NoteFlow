@@ -1,25 +1,42 @@
 <template>
-  <!-- <form @submit.prevent="submitForm">
-    <div>
-      <label>
-        Title
-      </label>
-      <input v-model="newNote.title">
+  <form @submit.prevent="submitForm">
+    <fwb-input
+      v-model="newNote.title"
+      placeholder="enter the title of your new note"
+      label="Title"
+      class="mb-2"
+      required
+    />
+    <fwb-textarea
+      v-model="newNote.content"
+      placeholder="enter the content of your new note"
+      label="Content"
+      required
+    />
+    <div class="mt-4 class flex justify-end">
+      <fwb-button
+        color="dark"
+        class="transition-all duration-150"
+        @click="submitForm"
+      >
+        <div class="flex items-center gap-2">
+          <fwb-spinner
+            v-if="isLoading"
+            size="4"
+          />
+          <span>{{ isLoading ? 'Submtting...': 'Submit' }}</span>
+        </div>
+      </fwb-button>
     </div>
-    <div>
-      <label>
-        Content
-      </label>
-      <input v-model="newNote.content">
-    </div>
-    <button type="submit">{{ isLoading ? 'Submitting...' : 'Submit' }}</button>
-  </form> -->
-  <div>Create form</div>
+  </form>
 </template>
-<script>
+<script setup>
 import { ref } from 'vue';
-import { useNotesStore } from '../../store/notes';
+import {
+  FwbInput, FwbTextarea, FwbButton, FwbSpinner,
+} from 'flowbite-vue';
 import { storeToRefs } from 'pinia';
+import { useNotesStore } from '../../store/notes';
 
 const notesStore = useNotesStore();
 const { isLoading } = storeToRefs(notesStore);
