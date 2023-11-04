@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { 
+import {
   collection,
   getDocs,
   addDoc,
@@ -27,7 +27,7 @@ export const useNotesStore = defineStore('notes', {
       this.notes = querySnapshot.docs.map((docEntry) => ({
         id: docEntry.id,
         ...docEntry.data(),
-      }));
+      })).sort((a, b) => b.timestamp.seconds - a.timestamp.seconds);
       this.isLoading = false;
     },
     async fetchNotesWithoutLoader() {
@@ -41,7 +41,7 @@ export const useNotesStore = defineStore('notes', {
       await addDoc(collection(db, 'notes'), {
         ...note,
         timestamp: serverTimestamp(),
-      });
+      }).sort((a, b) => b.timestamp.seconds - a.timestamp.seconds);
       await this.fetchNotesWithoutLoader();
     },
     async updateNote(note, id) {

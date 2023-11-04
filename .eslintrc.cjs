@@ -27,6 +27,7 @@ module.exports = {
         map: [
           ['@', './src/'],
           ['@components', './src/components'],
+          ['@store', './src/store'],
         ],
         extensions: ['.js', '.vue'],
       },

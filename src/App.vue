@@ -34,8 +34,12 @@
           </div>
         </div>
       </section>
-      <section v-else>
-        <LoginForm />
+      <section
+        v-else
+        class="flex justify-center w-full"
+      >
+        <RegisterForm />
+        <!-- <LoginForm /> -->
       </section>
       <ConfigNoteModal
         v-model:visible="showConfigModal"
@@ -50,9 +54,10 @@ import { storeToRefs } from 'pinia';
 import LoginForm from '@components/auth/LoginForm.vue';
 import ConfigNoteModal from '@components/modals/ConfigNote.vue';
 import { FwbButton, FwbSpinner } from 'flowbite-vue';
-import NoteList from './components/notes/NoteList.vue';
-import { useNotesStore } from './store/notes';
-import { useUsersStore } from './store/users';
+import RegisterForm from '@components/auth/RegisterForm.vue';
+import NoteList from '@components/notes/NoteList.vue';
+import { useNotesStore } from '@store/notes';
+import { useUsersStore } from '@store/users';
 
 const notesStore = useNotesStore();
 const userStore = useUsersStore();
