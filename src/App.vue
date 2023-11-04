@@ -1,5 +1,6 @@
 <template>
   <section>
+    <notifications />
     <header />
     <main class="w-full h-screen">
       <section

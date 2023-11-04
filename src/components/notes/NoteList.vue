@@ -1,5 +1,8 @@
 <template>
-  <div class="flex flex-col gap-4">
+  <div
+    v-auto-animate
+    class="flex flex-col gap-4"
+  >
     <NoteItem
       v-for="note in notes"
       :key="note.id"

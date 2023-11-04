@@ -10,6 +10,8 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@formkit/auto-animate": "^0.8.0",
+    "@kyvg/vue3-notification": "^3.0.2",
     "@rollup/plugin-eslint": "^9.0.5",
     "axios": "^1.6.0",
     "eslint": "^8.52.0",

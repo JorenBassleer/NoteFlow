@@ -35,7 +35,10 @@ import {
   FwbInput, FwbTextarea, FwbButton, FwbSpinner,
 } from 'flowbite-vue';
 import { storeToRefs } from 'pinia';
+import { useNotification } from '@kyvg/vue3-notification';
 import { useNotesStore } from '../../store/notes';
+
+const { notify } = useNotification();
 
 const props = defineProps({
   note: {
@@ -64,13 +67,21 @@ const submitForm = async () => {
     if (props.isCreate) await notesStore.createNote(newNote.value);
     else await notesStore.updateNote(newNote.value, props.note.id);
     emit('submitSuccess');
+    notify({
+      title: 'Success',
+      text: 'Your note has been saved',
+      type: 'success',
+    });
     newNote.value = {
       title: '',
       content: '',
     };
-    // Notify user
   } catch (error) {
-    console.log(error);
+    notify({
+      title: 'Error',
+      text: error.message,
+      type: 'danger',
+    });
   }
 };
 </script>

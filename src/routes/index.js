@@ -1,4 +1,12 @@
-import AppRoutes from './app-routes';
-import AuthRoutes from './auth-routes';
-
-export default [...AppRoutes, ...AuthRoutes];
+export default [
+  {
+    path: '/',
+    name: 'home',
+    component: () => import('../App.vue'),
+  },
+  {
+    path: '/:catchAll(.*)',
+    name: 'NotFound',
+    component: '',
+  },
+];
