@@ -16,6 +16,15 @@
         >
           Create new note
         </fwb-button>
+        <fwb-button
+          color="red"
+          outline
+          size="lg"
+          class="transition-all duration-150 h-15"
+          @click="handleSignOut"
+        >
+          Sign out
+        </fwb-button>
         <div class="flex gap-2 w-full xl:w-1/3 justify-center overflow-y-scroll p-4 m-4">
           <NoteList
             v-if="!isLoading"
@@ -36,10 +45,10 @@
       </section>
       <section
         v-else
-        class="flex justify-center w-full"
+        class="flex flex-col items-center justify-center w-full"
       >
         <RegisterForm />
-        <!-- <LoginForm /> -->
+        <LoginForm />
       </section>
       <ConfigNoteModal
         v-model:visible="showConfigModal"
@@ -54,6 +63,7 @@ import { storeToRefs } from 'pinia';
 import LoginForm from '@components/auth/LoginForm.vue';
 import ConfigNoteModal from '@components/modals/ConfigNote.vue';
 import { FwbButton, FwbSpinner } from 'flowbite-vue';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import RegisterForm from '@components/auth/RegisterForm.vue';
 import NoteList from '@components/notes/NoteList.vue';
 import { useNotesStore } from '@store/notes';
@@ -64,6 +74,7 @@ const userStore = useUsersStore();
 const { notes, isLoading } = storeToRefs(notesStore);
 const noteToEdit = ref(null);
 const showConfigModal = ref(false);
+let auth;
 
 const handleClickEdit = (note) => {
   noteToEdit.value = note;
@@ -75,7 +86,18 @@ const handleClickCreate = () => {
   showConfigModal.value = true;
 };
 
+const handleSignOut = () => {
+  signOut(auth).then(() => {
+    
+  });
+};
+
 onMounted(async () => {
+  auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+    if (user) userStore.isLoggedIn = true;
+    else userStore.isLoggedIn = false;
+  });
   await notesStore.fetchNotes();
 });
 </script>
