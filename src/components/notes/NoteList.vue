@@ -4,11 +4,12 @@
       v-for="note in notes"
       :key="note.id"
       :note="note"
+      @edit-note="$emit('editNote', $event)"
     />
   </div>
 </template>
 <script setup>
-import { defineProps } from 'vue';
+import { defineProps, defineEmits } from 'vue';
 import NoteItem from './NoteItem.vue';
 
 defineProps({
@@ -17,4 +18,6 @@ defineProps({
     default: () => [],
   },
 });
+
+defineEmits(['editNote']);
 </script>

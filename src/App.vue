@@ -6,21 +6,20 @@
         v-if="userStore.isLoggedIn"
         class="h-full w-full flex gap-10 flex-col justify-center items-center p-8"
       >
-        <div class="flex justify-end">
-          <fwb-button
-            gradient="purple-blue"
-            outline
-            size="lg"
-            class="transition-all duration-150"
-            @click="showCreateModal = true"
-          >
-            Create new note
-          </fwb-button>
-        </div>
-        <div class="flex gap-2 overflow-y-scroll p-4 m-4">
+        <fwb-button
+          gradient="purple-blue"
+          outline
+          size="lg"
+          class="transition-all duration-150"
+          @click="handleClickCreate"
+        >
+          Create new note
+        </fwb-button>
+        <div class="flex gap-2 w-1/3 justify-center overflow-y-scroll p-4 m-4">
           <NoteList
             v-if="!isLoading"
             :notes="notes"
+            @edit-note="handleClickEdit"
           />
           <div
             v-else
@@ -37,9 +36,9 @@
       <section v-else>
         <LoginForm />
       </section>
-      <!-- <CreateForm /> -->
       <ConfigNoteModal
-        v-model:visible="showCreateModal"
+        v-model:visible="showConfigModal"
+        :note="noteToEdit"
       />
     </main>
   </section>
@@ -57,7 +56,18 @@ import { useUsersStore } from './store/users';
 const notesStore = useNotesStore();
 const userStore = useUsersStore();
 const { notes, isLoading } = storeToRefs(notesStore);
-const showCreateModal = ref(false);
+const noteToEdit = ref(null);
+const showConfigModal = ref(false);
+
+const handleClickEdit = (note) => {
+  noteToEdit.value = note;
+  showConfigModal.value = true;
+};
+
+const handleClickCreate = () => {
+  noteToEdit.value = null;
+  showConfigModal.value = true;
+};
 
 onMounted(async () => {
   await notesStore.fetchNotes();

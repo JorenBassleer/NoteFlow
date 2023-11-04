@@ -21,4 +21,16 @@ module.exports = {
     'func-style': ['error', 'expression', { allowArrowFunctions: true }],
     'array-bracket-newline': ['error', { multiline: true }],
   },
-};
+  settings: {
+    'import/resolver': {
+      alias: {
+        map: [
+          ['@', './src/'],
+          ['@views', './src/views'],
+          ['@components', './src/components'],
+        ],
+        extensions: ['.js', '.vue'],
+      },
+    },
+  }
+}
