@@ -1,13 +1,14 @@
 <template>
   <section>
     <header />
-    <main>
+    <main class="w-full h-screen">
       <section v-if="userStore.isLoggedIn">
         <div
           v-for="note in notes"
           :key="note"
         >
           Note: {{ note.content }}
+          <NoteItem />
         </div>
       </section>
       <section v-else>
@@ -21,6 +22,7 @@
 import { onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import LoginForm from '@components/auth/LoginForm.vue'
+import NoteItem from './components/notes/NoteItem.vue';
 import { useNotesStore } from './store/notes';
 import { useUsersStore } from './store/users';
 
