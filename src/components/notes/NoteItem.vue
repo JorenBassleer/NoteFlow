@@ -51,9 +51,11 @@
 <script setup>
 import { defineProps, defineEmits } from 'vue';
 import { FwbCard, FwbAvatar, FwbButton } from 'flowbite-vue';
+import { useNotification } from '@kyvg/vue3-notification';
 import { useNotesStore } from '../../store/notes';
 
 const store = useNotesStore();
+const { notify } = useNotification();
 
 const props = defineProps({
   note: {
@@ -64,11 +66,19 @@ const props = defineProps({
 defineEmits(['editNote']);
 
 const handleClickDelete = async () => {
+  // Ask for confirm
   try {
     await store.deleteNote(props.note.id);
-    // Notify the user
+    notify({
+      title: 'Deleted note',
+      text: 'Successfully deleted note',
+    });
   } catch (error) {
-    console.error(error);
+    notify({
+      title: 'Error',
+      text: error.message,
+      type: 'danger',
+    });
   }
 };
 </script>
