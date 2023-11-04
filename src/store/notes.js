@@ -25,14 +25,8 @@ export const useNotesStore = defineStore('notes', {
       this.isLoading = false;
     },
     async createNote(note) {
-      this.isLoading = true;
-      const newlyCreatedNote = await addDoc(collection(db, 'notes'), note);
-      // send to server
-      this.notes.push({
-        id: newlyCreatedNote.id,
-        ...newlyCreatedNote.data(),
-      });
-      this.isLoading = false;
+      await addDoc(collection(db, 'notes'), note);
+      await this.fetchNotes();
     },
     updateNote: (note, id) => {
       // send to server
