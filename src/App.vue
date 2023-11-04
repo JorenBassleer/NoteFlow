@@ -10,12 +10,12 @@
           gradient="purple-blue"
           outline
           size="lg"
-          class="transition-all duration-150"
+          class="transition-all duration-150 h-15"
           @click="handleClickCreate"
         >
           Create new note
         </fwb-button>
-        <div class="flex gap-2 w-1/3 justify-center overflow-y-scroll p-4 m-4">
+        <div class="flex gap-2 w-full xl:w-1/3 justify-center overflow-y-scroll p-4 m-4">
           <NoteList
             v-if="!isLoading"
             :notes="notes"

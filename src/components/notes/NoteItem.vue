@@ -10,7 +10,7 @@
       </div>
       <section class="w-full p-2">
         <!-- Check if user is the one allowed to do this -->
-        <div class="absolute top-0 right-0 z-40">
+        <div class="absolute flex gap-2 top-0 right-0 z-40">
           <fwb-button
             color="yellow"
             size="xs"
@@ -19,8 +19,16 @@
           >
             Edit
           </fwb-button>
+          <fwb-button
+            color="red"
+            size="xs"
+            class="transition-all duration-150"
+            @click="handleClickDelete"
+          >
+            Delete
+          </fwb-button>
         </div>
-        <div class="flex relative gap-4">
+        <div class="flex relative gap-4 my-6">
           <div class="text-xl text-gray-800 w-1/3">
             Title:
           </div>
@@ -43,12 +51,24 @@
 <script setup>
 import { defineProps, defineEmits } from 'vue';
 import { FwbCard, FwbAvatar, FwbButton } from 'flowbite-vue';
+import { useNotesStore } from '../../store/notes';
 
-defineProps({
+const store = useNotesStore();
+
+const props = defineProps({
   note: {
     type: Object,
     required: true,
   },
 });
 defineEmits(['editNote']);
+
+const handleClickDelete = async () => {
+  try {
+    await store.deleteNote(props.note.id);
+    // Notify the user
+  } catch (error) {
+    console.error(error);
+  }
+};
 </script>

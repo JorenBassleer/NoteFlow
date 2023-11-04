@@ -1,5 +1,13 @@
 import { defineStore } from 'pinia';
-import { collection, getDocs, addDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { 
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  serverTimestamp,
+  doc,
+  deleteDoc,
+} from 'firebase/firestore';
 import { db } from '../firebase';
 
 export const useNotesStore = defineStore('notes', {
@@ -17,30 +25,31 @@ export const useNotesStore = defineStore('notes', {
     async fetchNotes() {
       this.isLoading = true;
       const querySnapshot = await getDocs(collection(db, 'notes'));
-      const notesArray = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
+      this.notes = querySnapshot.docs.map((docEntry) => ({
+        id: docEntry.id,
+        ...docEntry.data(),
       }));
-      this.notes = notesArray;
       this.isLoading = false;
     },
     async createNote(note) {
+      console.log('createNote', note.title);
       await addDoc(collection(db, 'notes'), {
-        note,
+        ...note,
         timestamp: serverTimestamp(),
       });
       await this.fetchNotes();
     },
     async updateNote(note, id) {
-      await updateDoc(collection(db, 'notes', id), {
+      console.log('update note:', note);
+      await updateDoc(doc(db, 'notes', id), {
         ...note,
         timestamp: serverTimestamp(),
       });
       await this.fetchNotes();
-      // send to server
     },
-    deleteNote: (id) => {
-      // send request to server
+    async deleteNote(id) {
+      await deleteDoc(doc(db, 'notes', id));
+      await this.fetchNotes();
     },
   },
 });
