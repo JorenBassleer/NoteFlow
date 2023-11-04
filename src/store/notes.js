@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, addDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 
 export const useNotesStore = defineStore('notes', {
@@ -14,11 +14,14 @@ export const useNotesStore = defineStore('notes', {
     async fetchNotes() {
       const querySnapshot = await getDocs(collection(db, 'notes'));
       querySnapshot.forEach((doc) => {
-        this.notes.push(doc.data());
+        this.notes.push({
+          id: doc.id,
+          ...doc.data(),
+        });
       });
-      // get from server
     },
-    createNote: (note) => {
+    async createNote(note) {
+      const newlyCreatedNote = await addDoc(collection(db, 'notes'), note);
       // send to server
       this.notes.push(note);
     },
