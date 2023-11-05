@@ -7,25 +7,26 @@
         v-if="userStore.isLoggedIn || auth.currentUser"
         class="h-full w-full flex gap-10 flex-col justify-center items-center p-8"
       >
-        <fwb-button
-          gradient="purple-blue"
-          outline
-          size="lg"
-          class="transition-all duration-150 h-15"
-          @click="handleClickCreate"
-        >
-          Create new note
-        </fwb-button>
-        <fwb-button
-          color="red"
-          outline
-          size="lg"
-          class="transition-all duration-150 h-15"
-          @click="handleSignOut"
-        >
-          Sign out
-        </fwb-button>
-        <div class="flex gap-2 w-full xl:w-1/3 justify-center overflow-y-scroll p-4 m-4">
+        <div class="flex gap-2">
+          <fwb-button
+            gradient="purple-blue"
+            outline
+            size="lg"
+            class="transition-all duration-150 h-15"
+            @click="handleClickCreate"
+          >
+            Create new note
+          </fwb-button>
+          <fwb-button
+            color="red"
+            size="lg"
+            class="transition-all duration-150 h-15"
+            @click="handleSignOut"
+          >
+            Sign out
+          </fwb-button>
+        </div>
+        <div class="flex gap-2 w-full h-full xl:w-1/3 justify-center overflow-y-scroll p-4 m-4">
           <NoteList
             v-if="!isLoading"
             :notes="notes"

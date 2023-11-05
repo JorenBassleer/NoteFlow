@@ -5,7 +5,7 @@
     <div class="flex gap-6">
       <div class="flex items-center p-2">
         <fwb-avatar
-          initials="JB"
+          :initials="note.user.displayName || note.user.email"
         />
       </div>
       <section class="w-full p-2">
@@ -14,6 +14,14 @@
           v-if="auth.currentUser.uid === props.note.user.uid"
           class="absolute flex gap-2 top-0 right-0 z-40"
         >
+          <fwb-button
+            color="default"
+            size="xs"
+            class="transition-all duration-150"
+            @click="handleTogglePrivate"
+          >
+            Make {{ props.note.isPrivate ? 'un': '' }}private
+          </fwb-button>
           <fwb-button
             color="yellow"
             size="xs"
@@ -53,9 +61,11 @@
 </template>
 <script setup>
 import {
-  defineProps, defineEmits, onMounted,
+  defineProps, defineEmits,
 } from 'vue';
-import { FwbCard, FwbAvatar, FwbButton } from 'flowbite-vue';
+import {
+  FwbCard, FwbAvatar, FwbButton,
+} from 'flowbite-vue';
 import { getAuth } from 'firebase/auth';
 import { useNotification } from '@kyvg/vue3-notification';
 import { useNotesStore } from '@store/notes';
@@ -71,6 +81,26 @@ defineEmits(['editNote']);
 const store = useNotesStore();
 const auth = getAuth();
 const { notify } = useNotification();
+
+const handleTogglePrivate = async () => {
+  try {
+    await store.updateNote({
+      ...props.note,
+      isPrivate: !props.note.isPrivate,
+    }, props.note.id);
+    notify({
+      title: 'Success',
+      text: props.note.isPrivate ? 'Only you can see the note now' : 'Everyone can see the note again',
+      type: 'success',
+    });
+  } catch (error) {
+    notify({
+      title: 'Error',
+      text: error.message,
+      type: 'danger',
+    });
+  }
+};
 
 const handleClickDelete = async () => {
   // Ask for confirm
@@ -89,6 +119,4 @@ const handleClickDelete = async () => {
   }
 };
 
-onMounted(() => {
-});
 </script>

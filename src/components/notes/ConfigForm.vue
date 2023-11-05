@@ -62,6 +62,7 @@ const { isLoading } = storeToRefs(notesStore);
 const newNote = ref(props.note ?? {
   title: '',
   content: '',
+  isPrivate: false,
   user: {
     email: user.email,
     displayName: user.displayName,
