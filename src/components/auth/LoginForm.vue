@@ -1,11 +1,19 @@
 <template>
-  <div class="text-xl font-gray-800 font-semibold">
+  <div class="text-xl my-4 font-gray-800 font-semibold">
     Sign in
   </div>
   <form
     class="p-4 border-2 rounded-xl shadow-xl w-1/2"
     @submit.prevent="handleRegister"
   >
+    <div class="flex justify-end">
+      <fwb-button
+        color="dark"
+        @click="$emit('clickedRegister')"
+      >
+        New user? Register
+      </fwb-button>
+    </div>
     <fwb-input
       v-model="newUser.email"
       placeholder="enter your email address"
@@ -38,11 +46,13 @@
   </form>
 </template>
 <script setup>
-import { reactive } from 'vue';
+import { reactive, defineEmits } from 'vue';
 import { FwbInput, FwbButton } from 'flowbite-vue';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { useNotification } from '@kyvg/vue3-notification';
 import { useUsersStore } from '@store/users';
+
+defineEmits(['clickedRegister']);
 
 const { notify } = useNotification();
 
@@ -54,8 +64,13 @@ const newUser = reactive({
 
 const handleRegister = () => {
   signInWithEmailAndPassword(getAuth(), newUser.email, newUser.password)
-    .then((data) => {
+    .then(() => {
       store.isLoggedIn = true;
+      notify({
+        title: 'Success',
+        text: 'Registration complete',
+        type: 'success',
+      });
     })
     .catch((error) => {
       // auth/invalid-email

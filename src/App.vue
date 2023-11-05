@@ -53,8 +53,11 @@
         v-else
         class="flex flex-col items-center justify-center w-full"
       >
-        <RegisterForm />
-        <LoginForm />
+        <LoginForm
+          v-if="showLogin"
+          @clicked-register="showLogin = false"
+        />
+        <RegisterForm v-else />
       </section>
       <ConfigNoteModal
         v-model:visible="showConfigModal"
@@ -84,12 +87,19 @@ const { notes, isLoading } = storeToRefs(notesStore);
 
 const onlyMyNotes = ref(false);
 const notesList = computed(() => {
-  if (!onlyMyNotes.value) return notes.value;
+  if (!onlyMyNotes.value) {
+    return notes.value.filter((note) => {
+      if (note.isPrivate) return note.user.uid === auth.currentUser.uid;
+      return true;
+    });
+  }
+  // Don't need to check for private when all notes are from user
   return notes.value.filter((note) => note.user.uid === auth.currentUser.uid);
 });
 
 const noteToEdit = ref(null);
 const showConfigModal = ref(false);
+const showLogin = ref(true);
 
 const handleClickEdit = (note) => {
   noteToEdit.value = note;
@@ -103,6 +113,7 @@ const handleClickCreate = () => {
 
 const handleSignOut = () => {
   signOut(auth);
+  // force refresh
   router.go(0);
 };
 

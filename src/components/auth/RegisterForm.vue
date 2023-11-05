@@ -1,4 +1,7 @@
 <template>
+  <div class="text-xl my-4 font-gray-800 font-semibold">
+    Register
+  </div>
   <form
     class="p-4 border-2 rounded-xl shadow-xl w-1/2"
     @submit.prevent="handleRegister"
@@ -51,9 +54,13 @@ const newUser = reactive({
 
 const handleRegister = () => {
   createUserWithEmailAndPassword(getAuth(), newUser.email, newUser.password)
-    .then((data) => {
+    .then(() => {
       store.isLoggedIn = true;
-      console.log('Successfully registered', data);
+      notify({
+        title: 'Success',
+        text: 'Logged in successfully',
+        type: 'success',
+      });
     })
     .catch((error) => {
       notify({
