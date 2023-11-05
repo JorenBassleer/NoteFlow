@@ -22,7 +22,7 @@
             class="transition-all duration-150"
             @click="handleTogglePrivate"
           >
-            Make {{ props.note.isPrivate ? 'un': '' }}private
+            Set {{ props.note.isPrivate ? 'un': '' }}private
           </fwb-button>
           <fwb-button
             color="yellow"
