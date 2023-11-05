@@ -5,7 +5,7 @@
     <main class="w-full h-screen">
       <section
         v-if="userStore.isLoggedIn || auth.currentUser"
-        class="h-full w-full flex gap-10 flex-col justify-center items-center p-8"
+        class="h-full w-full flex gap-5 flex-col justify-center items-center p-8"
       >
         <div class="flex gap-2">
           <fwb-button
@@ -26,10 +26,15 @@
             Sign out
           </fwb-button>
         </div>
+        <section>
+          <fwb-button @click="onlyMyNotes = !onlyMyNotes">
+            {{ onlyMyNotes ? 'View all notes' : 'My notes' }}
+          </fwb-button>
+        </section>
         <div class="flex gap-2 w-full h-full xl:w-1/3 justify-center overflow-y-scroll p-4 m-4">
           <NoteList
             v-if="!isLoading"
-            :notes="notes"
+            :notes="notesList"
             @edit-note="handleClickEdit"
           />
           <div
@@ -59,7 +64,7 @@
   </section>
 </template>
 <script setup>
-import { onBeforeMount, ref } from 'vue';
+import { onBeforeMount, ref, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import LoginForm from '@components/auth/LoginForm.vue';
 import ConfigNoteModal from '@components/modals/ConfigNote.vue';
@@ -71,13 +76,20 @@ import NoteList from '@components/notes/NoteList.vue';
 import { useNotesStore } from '@store/notes';
 import { useUsersStore } from '@store/users';
 
+let auth;
 const router = useRouter();
 const notesStore = useNotesStore();
 const userStore = useUsersStore();
 const { notes, isLoading } = storeToRefs(notesStore);
+
+const onlyMyNotes = ref(false);
+const notesList = computed(() => {
+  if (!onlyMyNotes.value) return notes.value;
+  return notes.value.filter((note) => note.user.uid === auth.currentUser.uid);
+});
+
 const noteToEdit = ref(null);
 const showConfigModal = ref(false);
-let auth;
 
 const handleClickEdit = (note) => {
   noteToEdit.value = note;
