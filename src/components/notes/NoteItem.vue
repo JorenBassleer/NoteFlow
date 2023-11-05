@@ -10,7 +10,10 @@
       </div>
       <section class="w-full p-2">
         <!-- Check if user is the one allowed to do this -->
-        <div class="absolute flex gap-2 top-0 right-0 z-40">
+        <div
+          v-if="auth.currentUser.uid === props.note.user.uid"
+          class="absolute flex gap-2 top-0 right-0 z-40"
+        >
           <fwb-button
             color="yellow"
             size="xs"
@@ -50,17 +53,13 @@
 </template>
 <script setup>
 import {
-  defineProps, defineEmits, onMounted, ref,
+  defineProps, defineEmits, onMounted,
 } from 'vue';
 import { FwbCard, FwbAvatar, FwbButton } from 'flowbite-vue';
-import { useNotification } from '@kyvg/vue3-notification';
 import { getAuth } from 'firebase/auth';
-import { useNotesStore } from '../../store/notes';
+import { useNotification } from '@kyvg/vue3-notification';
+import { useNotesStore } from '@store/notes';
 
-const store = useNotesStore();
-const { notify } = useNotification();
-const user = ref();
-const auth = getAuth();
 const props = defineProps({
   note: {
     type: Object,
@@ -68,6 +67,10 @@ const props = defineProps({
   },
 });
 defineEmits(['editNote']);
+
+const store = useNotesStore();
+const auth = getAuth();
+const { notify } = useNotification();
 
 const handleClickDelete = async () => {
   // Ask for confirm
@@ -87,8 +90,5 @@ const handleClickDelete = async () => {
 };
 
 onMounted(() => {
-  auth.getUser(props.note.userId).then((userRecord) => {
-    user.value = userRecord;
-  });
 });
 </script>

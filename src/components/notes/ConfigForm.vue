@@ -47,6 +47,7 @@ const props = defineProps({
     default: () => ({
       title: '',
       content: '',
+      user: null,
     }),
   },
   isCreate: {
@@ -61,7 +62,11 @@ const { isLoading } = storeToRefs(notesStore);
 const newNote = ref(props.note ?? {
   title: '',
   content: '',
-  userId: user.uid,
+  user: {
+    email: user.email,
+    displayName: user.displayName,
+    uid: user.uid,
+  },
 });
 
 const submitForm = async () => {
