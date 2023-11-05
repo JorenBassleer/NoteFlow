@@ -6,6 +6,14 @@
     class="p-4 border-2 rounded-xl shadow-xl w-1/2"
     @submit.prevent="handleRegister"
   >
+    <div class="flex justify-end">
+      <fwb-button
+        color="dark"
+        @click="$emit('clickedLogin')"
+      >
+        Already an account? Login
+      </fwb-button>
+    </div>
     <fwb-input
       v-model="newUser.email"
       placeholder="enter your email address"
@@ -38,11 +46,13 @@
   </form>
 </template>
 <script setup>
-import { reactive } from 'vue';
+import { reactive, defineEmits } from 'vue';
 import { FwbInput, FwbButton } from 'flowbite-vue';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { useNotification } from '@kyvg/vue3-notification';
 import { useUsersStore } from '@store/users';
+
+defineEmits(['clickedLogin']);
 
 const { notify } = useNotification();
 

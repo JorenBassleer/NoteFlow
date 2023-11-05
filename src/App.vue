@@ -57,7 +57,10 @@
           v-if="showLogin"
           @clicked-register="showLogin = false"
         />
-        <RegisterForm v-else />
+        <RegisterForm
+          v-else
+          @clicked-login="showLogin = true"
+        />
       </section>
       <ConfigNoteModal
         v-model:visible="showConfigModal"
@@ -117,12 +120,22 @@ const handleSignOut = () => {
   router.go(0);
 };
 
+const getCurrentUser = () => new Promise((resolve, reject) => {
+  const removeListener = onAuthStateChanged(
+    getAuth(),
+    (user) => {
+      userStore.isLoggedIn = true;
+      removeListener();
+      resolve(user);
+    },
+    reject,
+  );
+});
+
 onBeforeMount(async () => {
   auth = getAuth();
-  onAuthStateChanged(auth, (user) => {
-    if (user) userStore.isLoggedIn = true;
-    else userStore.isLoggedIn = false;
-  });
+  if (await getCurrentUser())userStore.isLoggedIn = true;
+  else userStore.isLoggedIn = false;
   await notesStore.fetchNotes();
 });
 </script>
