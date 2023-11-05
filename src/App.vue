@@ -7,7 +7,7 @@
         v-if="userStore.isLoggedIn || auth.currentUser"
         class="h-full w-full flex gap-5 flex-col justify-center items-center p-8"
       >
-        <div class="flex gap-2">
+        <div class="flex gap-2 mt-6">
           <fwb-button
             gradient="purple-blue"
             outline
@@ -26,26 +26,28 @@
             Sign out
           </fwb-button>
         </div>
-        <section>
-          <fwb-button @click="onlyMyNotes = !onlyMyNotes">
-            {{ onlyMyNotes ? 'View all notes' : 'My notes' }}
-          </fwb-button>
-        </section>
-        <div class="flex gap-2 w-full h-full xl:w-1/3 justify-center overflow-y-scroll p-4 m-4">
-          <NoteList
-            v-if="!isLoading"
-            :notes="notesList"
-            @edit-note="handleClickEdit"
-          />
-          <div
-            v-else
-            class="flex flex-col gap-2 justify-center items-center"
-          >
-            <fwb-spinner
-              color="white"
-              size="12"
+        <div class="w-full h-full flex gap-2 justify-center flex-col items-center">
+          <div>
+            <fwb-button @click="onlyMyNotes = !onlyMyNotes">
+              {{ onlyMyNotes ? 'View all notes' : 'My notes' }}
+            </fwb-button>
+          </div>
+          <div class="flex gap-2 w-full h-full xl:w-1/3 justify-center overflow-y-scroll p-6 mb-8 border rounded-xl">
+            <NoteList
+              v-if="!isLoading"
+              :notes="notesList"
+              @edit-note="handleClickEdit"
             />
-            <span class="text-white font-semibold">Loading notes...</span>
+            <div
+              v-else
+              class="flex flex-col gap-2 justify-center items-center"
+            >
+              <fwb-spinner
+                color="white"
+                size="12"
+              />
+              <span class="text-white font-semibold">Loading notes...</span>
+            </div>
           </div>
         </div>
       </section>

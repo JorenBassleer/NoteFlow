@@ -1,17 +1,19 @@
 <template>
   <fwb-card
-    class="shadow-xl p-4 border border-black"
+    class="shadow-xl p-4 border border-black transition-all duration-150"
   >
     <div class="flex gap-6">
-      <div class="flex items-center p-2">
-        <fwb-avatar
-          :initials="note.user.displayName || note.user.email"
-        />
+      <div class="flex items-center p-2 w-1/3">
+        <fwb-badge
+          :type="noteIsFromLoggedInUser ? 'green' : 'default'"
+        >
+          {{ note.user.displayName || note.user.email }}
+        </fwb-badge>
       </div>
       <section class="w-full p-2">
         <!-- Check if user is the one allowed to do this -->
         <div
-          v-if="auth.currentUser.uid === props.note.user.uid"
+          v-if="noteIsFromLoggedInUser"
           class="absolute flex gap-2 top-0 right-0 z-40"
         >
           <fwb-button
@@ -39,7 +41,7 @@
             Delete
           </fwb-button>
         </div>
-        <div class="flex relative gap-4 my-6">
+        <div class="flex items-center relative gap-4 my-6">
           <div class="text-xl text-gray-800 w-1/3">
             Title:
           </div>
@@ -47,7 +49,7 @@
             {{ note.title }}
           </div>
         </div>
-        <div class="flex gap-4">
+        <div class="flex items-center gap-4">
           <div class="font-semibold text-gray-800 w-1/3">
             content:
           </div>
@@ -61,10 +63,10 @@
 </template>
 <script setup>
 import {
-  defineProps, defineEmits,
+  defineProps, defineEmits, computed,
 } from 'vue';
 import {
-  FwbCard, FwbAvatar, FwbButton,
+  FwbCard, FwbButton, FwbBadge,
 } from 'flowbite-vue';
 import { getAuth } from 'firebase/auth';
 import { useNotification } from '@kyvg/vue3-notification';
@@ -81,6 +83,7 @@ defineEmits(['editNote']);
 const store = useNotesStore();
 const auth = getAuth();
 const { notify } = useNotification();
+const noteIsFromLoggedInUser = computed(() => auth.currentUser.uid === props.note.user.uid);
 
 const handleTogglePrivate = async () => {
   try {

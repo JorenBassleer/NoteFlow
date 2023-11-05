@@ -48,7 +48,9 @@
 <script setup>
 import { reactive, defineEmits } from 'vue';
 import { FwbInput, FwbButton } from 'flowbite-vue';
-import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import {
+  getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup,
+} from 'firebase/auth';
 import { useNotification } from '@kyvg/vue3-notification';
 import { useUsersStore } from '@store/users';
 
