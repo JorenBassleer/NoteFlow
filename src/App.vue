@@ -64,11 +64,13 @@ import LoginForm from '@components/auth/LoginForm.vue';
 import ConfigNoteModal from '@components/modals/ConfigNote.vue';
 import { FwbButton, FwbSpinner } from 'flowbite-vue';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { useRouter } from 'vue-router';
 import RegisterForm from '@components/auth/RegisterForm.vue';
 import NoteList from '@components/notes/NoteList.vue';
 import { useNotesStore } from '@store/notes';
 import { useUsersStore } from '@store/users';
 
+const router = useRouter();
 const notesStore = useNotesStore();
 const userStore = useUsersStore();
 const { notes, isLoading } = storeToRefs(notesStore);
@@ -88,6 +90,7 @@ const handleClickCreate = () => {
 
 const handleSignOut = () => {
   signOut(auth);
+  router.go(0);
 };
 
 onBeforeMount(async () => {

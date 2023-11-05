@@ -49,7 +49,9 @@
   </fwb-card>
 </template>
 <script setup>
-import { defineProps, defineEmits, onMounted, ref } from 'vue';
+import {
+  defineProps, defineEmits, onMounted, ref,
+} from 'vue';
 import { FwbCard, FwbAvatar, FwbButton } from 'flowbite-vue';
 import { useNotification } from '@kyvg/vue3-notification';
 import { getAuth } from 'firebase/auth';
