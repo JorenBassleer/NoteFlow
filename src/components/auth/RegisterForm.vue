@@ -48,7 +48,9 @@
 <script setup>
 import { reactive, defineEmits } from 'vue';
 import { FwbInput, FwbButton } from 'flowbite-vue';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import {
+  getAuth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup,
+} from 'firebase/auth';
 import { useNotification } from '@kyvg/vue3-notification';
 import { useUsersStore } from '@store/users';
 
@@ -82,6 +84,22 @@ const handleRegister = () => {
 };
 
 const handleSignInWithGoogle = () => {
-
+  const provider = new GoogleAuthProvider();
+  signInWithPopup(getAuth(), provider)
+    .then(() => {
+      store.isLoggedIn = true;
+      notify({
+        title: 'Success',
+        text: 'Logged in successfully',
+        type: 'success',
+      });
+    })
+    .catch((error) => {
+      notify({
+        title: 'Error',
+        text: error.message,
+        type: 'danger',
+      });
+    });
 };
 </script>
