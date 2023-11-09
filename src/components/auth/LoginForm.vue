@@ -4,7 +4,7 @@
   </div>
   <form
     class="p-4 border-2 rounded-xl shadow-xl w-1/2"
-    @submit.prevent="handleRegister"
+    @submit.prevent="handleLogin"
   >
     <div class="flex justify-end">
       <fwb-button
@@ -40,7 +40,7 @@
         color="dark"
         class="transition-all duration-150"
       >
-        Register
+        Login
       </fwb-button>
     </div>
   </form>
@@ -51,6 +51,7 @@ import { FwbInput, FwbButton } from 'flowbite-vue';
 import {
   getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup,
 } from 'firebase/auth';
+import * as Yup from 'yup';
 import { useNotification } from '@kyvg/vue3-notification';
 import { useUsersStore } from '@store/users';
 
@@ -64,27 +65,30 @@ const newUser = reactive({
   password: '',
 });
 
-const handleRegister = () => {
-  signInWithEmailAndPassword(getAuth(), newUser.email, newUser.password)
-    .then(() => {
-      store.isLoggedIn = true;
-      notify({
-        title: 'Success',
-        text: 'Registration complete',
-        type: 'success',
+const userSchema = Yup.object({
+  email: Yup.string().email().required(),
+  password: Yup.string().required(),
+});
+
+const handleLogin = async () => {
+  try {
+    await userSchema.validate(newUser.value);
+    signInWithEmailAndPassword(getAuth(), newUser.email, newUser.password)
+      .then(() => {
+        store.isLoggedIn = true;
+        notify({
+          title: 'Success',
+          text: 'Registration complete',
+          type: 'success',
+        });
       });
-    })
-    .catch((error) => {
-      // auth/invalid-email
-      // auth/user-not-found
-      // auth/wrong-password
-      // auth/user-disabled
-      notify({
-        title: 'Error registering',
-        text: error.message,
-        type: 'danger',
-      });
+  } catch (error) {
+    notify({
+      title: 'Error registering',
+      text: error.message,
+      type: 'danger',
     });
+  }
 };
 
 const handleSignInWithGoogle = () => {

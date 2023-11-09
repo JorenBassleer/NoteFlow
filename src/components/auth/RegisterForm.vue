@@ -51,6 +51,7 @@ import { FwbInput, FwbButton } from 'flowbite-vue';
 import {
   getAuth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup,
 } from 'firebase/auth';
+import * as Yup from 'yup';
 import { useNotification } from '@kyvg/vue3-notification';
 import { useUsersStore } from '@store/users';
 
@@ -63,24 +64,29 @@ const newUser = reactive({
   email: '',
   password: '',
 });
-
-const handleRegister = () => {
-  createUserWithEmailAndPassword(getAuth(), newUser.email, newUser.password)
-    .then(() => {
-      store.isLoggedIn = true;
-      notify({
-        title: 'Success',
-        text: 'Logged in successfully',
-        type: 'success',
+const userSchema = Yup.object({
+  email: Yup.string().email().required(),
+  password: Yup.string().required(),
+});
+const handleRegister = async () => {
+  try {
+    await userSchema.validate(newUser.value);
+    createUserWithEmailAndPassword(getAuth(), newUser.email, newUser.password)
+      .then(() => {
+        store.isLoggedIn = true;
+        notify({
+          title: 'Success',
+          text: 'Logged in successfully',
+          type: 'success',
+        });
       });
-    })
-    .catch((error) => {
-      notify({
-        title: 'Error registering',
-        text: error.message,
-        type: 'danger',
-      });
+  } catch (error) {
+    notify({
+      title: 'Error registering',
+      text: error.message,
+      type: 'danger',
     });
+  }
 };
 
 const handleSignInWithGoogle = () => {

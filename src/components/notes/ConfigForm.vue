@@ -37,7 +37,10 @@ import {
 import { storeToRefs } from 'pinia';
 import { getAuth } from 'firebase/auth';
 import { useNotification } from '@kyvg/vue3-notification';
+import * as Yup from 'yup';
 import { useNotesStore } from '../../store/notes';
+
+const emit = defineEmits(['submitSuccess']);
 
 const { notify } = useNotification();
 const user = getAuth().currentUser;
@@ -55,7 +58,11 @@ const props = defineProps({
     default: false,
   },
 });
-const emit = defineEmits(['submitSuccess']);
+
+const formSchema = Yup.object({
+  title: Yup.string().required(),
+  content: Yup.string().required(),
+});
 
 const notesStore = useNotesStore();
 const { isLoading } = storeToRefs(notesStore);
@@ -72,6 +79,7 @@ const newNote = ref(props.note ?? {
 
 const submitForm = async () => {
   try {
+    await formSchema.validate(newNote.value);
     if (props.isCreate) await notesStore.createNote(newNote.value);
     else await notesStore.updateNote(newNote.value, props.note.id);
     emit('submitSuccess');
