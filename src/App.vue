@@ -55,14 +55,7 @@
         v-else
         class="flex flex-col items-center justify-center w-full"
       >
-        <LoginForm
-          v-if="showLogin"
-          @clicked-register="showLogin = false"
-        />
-        <RegisterForm
-          v-else
-          @clicked-login="showLogin = true"
-        />
+        <AuthForm />
       </section>
       <ConfigNoteModal
         v-model:visible="showConfigModal"
@@ -74,12 +67,11 @@
 <script setup>
 import { onBeforeMount, ref, computed } from 'vue';
 import { storeToRefs } from 'pinia';
-import LoginForm from '@components/auth/LoginForm.vue';
+import AuthForm from '@components/auth/AuthForm.vue';
 import ConfigNoteModal from '@components/modals/ConfigNote.vue';
 import { FwbButton, FwbSpinner } from 'flowbite-vue';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { useRouter } from 'vue-router';
-import RegisterForm from '@components/auth/RegisterForm.vue';
 import NoteList from '@components/notes/NoteList.vue';
 import { useNotesStore } from '@store/notes';
 import { useUsersStore } from '@store/users';
@@ -104,7 +96,6 @@ const notesList = computed(() => {
 
 const noteToEdit = ref(null);
 const showConfigModal = ref(false);
-const showLogin = ref(true);
 
 const handleClickEdit = (note) => {
   noteToEdit.value = note;
