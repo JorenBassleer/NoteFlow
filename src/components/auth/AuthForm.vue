@@ -9,7 +9,8 @@
     <div class="flex justify-end">
       <fwb-button
         color="dark"
-        @click.stop.prevent="isRegister = !isRegister"
+        type="button"
+        @click="isRegister = !isRegister"
       >
         {{ isRegister ? 'Already have an account? Login': 'New user? Register' }}
       </fwb-button>
@@ -31,14 +32,16 @@
     <div class="flex justify-between mt-4">
       <fwb-button
         color="alternative"
+        type="button"
         class="transition-all duration-150"
-        @click.stop="handleSignInWithGoogle"
+        @click="handleSignInWithGoogle"
       >
         Sign in with Google
       </fwb-button>
       <fwb-button
         color="dark"
         class="transition-all duration-150"
+        :loading="isSubmitting"
       >
         {{ isRegister ? 'Register' : 'Login' }}
       </fwb-button>
@@ -65,6 +68,7 @@ const newUser = reactive({
   password: '',
 });
 const isRegister = ref(false);
+const isSubmitting = ref(false);
 
 const userSchema = Yup.object({
   email: Yup.string().email().required(),
@@ -81,6 +85,7 @@ const handleNotifyError = (error) => {
 
 const handleAuthSubmit = async () => {
   try {
+    isSubmitting.value = true;
     userSchema.validateSync(newUser);
     const authMethod = isRegister.value ? createUserWithEmailAndPassword : signInWithEmailAndPassword;
     authMethod(getAuth(), newUser.email, newUser.password)
@@ -96,6 +101,8 @@ const handleAuthSubmit = async () => {
       });
   } catch (error) {
     handleNotifyError(error);
+  } finally {
+    isSubmitting.value = false;
   }
 };
 
